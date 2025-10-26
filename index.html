@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Списать долг | Банкротство</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="container">
+            <div class="header-logo">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                    <circle cx="30" cy="30" r="28" fill="#2563eb" opacity="0.1"/>
+                    <path d="M30 15v30M15 30h30" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h1 class="welcome-title">Списать долг | Банкротство</h1>
+            <p class="welcome-subtitle">Онлайн-консультация по банкротству физических лиц и ИП</p>
+            <p class="welcome-description">
+                Получите персональную консультацию о процедуре банкротства. 
+                Мы поможем разобраться в вашей ситуации и подскажем оптимальный путь решения проблем с долгами.
+            </p>
+            <div class="button-group">
+                <button class="btn btn-primary btn-large" onclick="showScreen('user-type-screen')">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Начать консультацию
+                </button>
+                <button class="btn btn-secondary btn-large" onclick="showScreen('info-screen')">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 10v4M10 6h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    О банкротстве
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Type Selection Screen -->
+    <div id="user-type-screen" class="screen">
+        <div class="container">
+            <button class="btn-back" onclick="showScreen('welcome-screen')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4l-8 6 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Назад
+            </button>
+            <h2 class="screen-title">Выберите тип должника:</h2>
+            <div class="user-type-cards">
+                <div class="user-type-card" onclick="selectUserType('individual')">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="16" r="8" stroke="#2563eb" stroke-width="2"/>
+                        <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>Физическое лицо</h3>
+                    <p>Для граждан с личными долгами по кредитам, налогам, ЖКХ</p>
+                </div>
+                <div class="user-type-card" onclick="selectUserType('entrepreneur')">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="16" width="32" height="24" rx="2" stroke="#2563eb" stroke-width="2"/>
+                        <path d="M16 16V12a8 8 0 0116 0v4" stroke="#2563eb" stroke-width="2"/>
+                        <circle cx="24" cy="28" r="3" fill="#2563eb"/>
+                    </svg>
+                    <h3>Индивидуальный предприниматель (ИП)</h3>
+                    <p>Для ИП с долгами по бизнесу или личным обязательствам</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questionnaire Screen -->
+    <div id="questionnaire-screen" class="screen">
+        <div class="container">
+            <button class="btn-back" onclick="showScreen('user-type-screen')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4l-8 6 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Назад
+            </button>
+            <div class="progress-indicator">
+                <span class="progress-step active">1</span>
+                <span class="progress-line"></span>
+                <span class="progress-step">2</span>
+                <span class="progress-line"></span>
+                <span class="progress-step">3</span>
+            </div>
+            <h2 class="screen-title">Расскажите о вашей ситуации</h2>
+            <form id="questionnaire-form" class="questionnaire-form">
+                <div class="form-group">
+                    <label class="form-label">Сумма долга</label>
+                    <div class="input-with-suffix">
+                        <input type="number" id="debt-amount" class="form-control" placeholder="Введите сумму" required>
+                        <span class="input-suffix">₽</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Срок просрочки</label>
+                    <select id="delay-period" class="form-control" required>
+                        <option value="">Выберите срок</option>
+                        <option value="less-3">Менее 3 месяцев</option>
+                        <option value="3-6">3-6 месяцев</option>
+                        <option value="6-12">Более 6 месяцев</option>
+                        <option value="more-12">Более года</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Тип долгов (можно выбрать несколько)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="debt-type" value="credit">
+                            <span>Кредиты</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="debt-type" value="tax">
+                            <span>Налоги</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="debt-type" value="utilities">
+                            <span>ЖКХ</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="debt-type" value="other">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Есть ли имущество?</label>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn" data-value="yes" onclick="toggleOption(this, 'has-property')">Да</button>
+                        <button type="button" class="toggle-btn" data-value="no" onclick="toggleOption(this, 'has-property')">Нет</button>
+                    </div>
+                    <input type="hidden" id="has-property" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Есть ли официальный доход?</label>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn" data-value="yes" onclick="toggleOption(this, 'has-income')">Да</button>
+                        <button type="button" class="toggle-btn" data-value="no" onclick="toggleOption(this, 'has-income')">Нет</button>
+                    </div>
+                    <input type="hidden" id="has-income" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" disabled id="questionnaire-submit">
+                    Продолжить
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI Chat Screen -->
+    <div id="chat-screen" class="screen">
+        <div class="chat-header">
+            <button class="btn-back" onclick="showScreen('welcome-screen')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4l-8 6 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="chat-header-title">
+                <h3>Списать долг | Банкротство</h3>
+                <span class="online-status">Онлайн</span>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="showScreen('booking-screen')">
+                Записаться
+            </button>
+        </div>
+        <div class="chat-container" id="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        <div class="quick-questions" id="quick-questions">
+            <button class="quick-question-btn" onclick="askQuickQuestion(this)" data-question="Какая процедура мне подходит?">Какая процедура мне подходит?</button>
+            <button class="quick-question-btn" onclick="askQuickQuestion(this)" data-question="Сколько стоит банкротство?">Сколько стоит банкротство?</button>
+            <button class="quick-question-btn" onclick="askQuickQuestion(this)" data-question="Какие документы нужны?">Какие документы нужны?</button>
+            <button class="quick-question-btn" onclick="askQuickQuestion(this)" data-question="Сколько длится процедура?">Сколько длится процедура?</button>
+            <button class="quick-question-btn" onclick="askQuickQuestion(this)" data-question="Что будет с имуществом?">Что будет с имуществом?</button>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Напишите ваш вопрос...">
+            <button class="btn-send" onclick="sendMessage()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M18 2L9 11M18 2l-6 16-3-7-7-3 16-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Information Screen -->
+    <div id="info-screen" class="screen">
+        <div class="container">
+            <button class="btn-back" onclick="showScreen('welcome-screen')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4l-8 6 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Назад
+            </button>
+            <h2 class="screen-title">О банкротстве</h2>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('individuals')">Для физ.лиц</button>
+                <button class="tab-btn" onclick="switchTab('entrepreneurs')">Для ИП</button>
+                <button class="tab-btn" onclick="switchTab('procedure')">Процедура</button>
+                <button class="tab-btn" onclick="switchTab('consequences')">Последствия</button>
+            </div>
+            <div class="tab-content">
+                <!-- Individuals Tab -->
+                <div id="tab-individuals" class="tab-pane active">
+                    <div class="info-card">
+                        <h3>Условия банкротства</h3>
+                        <ul>
+                            <li>При долге более 500,000 руб и просрочке 3+ месяца - обязательно</li>
+                            <li>При меньшей сумме - добровольно</li>
+                            <li>Главное условие - неспособность платить по обязательствам</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>Судебное банкротство</h3>
+                        <p><strong>Стоимость:</strong> От 30,000 до 90,000 рублей</p>
+                        <p><strong>Срок:</strong> 6-12 месяцев</p>
+                        <p><strong>Этапы:</strong></p>
+                        <ol>
+                            <li>Подача заявления</li>
+                            <li>Назначение управляющего</li>
+                            <li>Реструктуризация или реализация имущества</li>
+                            <li>Освобождение от долгов</li>
+                        </ol>
+                    </div>
+                    <div class="info-card">
+                        <h3>Упрощенное через МФЦ</h3>
+                        <p><strong>Стоимость:</strong> Бесплатно</p>
+                        <p><strong>Срок:</strong> 6 месяцев</p>
+                        <p><strong>Условия:</strong></p>
+                        <ul>
+                            <li>Долг 25,000-1,000,000 рублей</li>
+                            <li>Закрытые исполнительные производства</li>
+                            <li>Нет имущества для взыскания</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Entrepreneurs Tab -->
+                <div id="tab-entrepreneurs" class="tab-pane">
+                    <div class="info-card">
+                        <h3>Особенности для ИП</h3>
+                        <ul>
+                            <li>Процедура проще чем для юр.лиц</li>
+                            <li>ИП является физ.лицом</li>
+                            <li>Сначала снятие с учета в ИФНС</li>
+                            <li>Нужен финансовый управляющий</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>Процедуры</h3>
+                        <ul>
+                            <li>Реструктуризация долгов</li>
+                            <li>Реализация имущества</li>
+                            <li>Мировое соглашение (возможно на любом этапе)</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>Стоимость и сроки</h3>
+                        <p><strong>Госпошлина:</strong> 300 рублей</p>
+                        <p><strong>Управляющий:</strong> От 25,000 рублей</p>
+                        <p><strong>Срок:</strong> Обычно 6-12 месяцев</p>
+                    </div>
+                </div>
+                <!-- Procedure Tab -->
+                <div id="tab-procedure" class="tab-pane">
+                    <div class="info-card">
+                        <h3>Этапы процедуры банкротства</h3>
+                        <div class="procedure-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Подача заявления</h4>
+                                <p>Сбор документов и подача заявления в арбитражный суд или МФЦ</p>
+                            </div>
+                        </div>
+                        <div class="procedure-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Рассмотрение дела</h4>
+                                <p>Суд рассматривает заявление и принимает решение о начале процедуры</p>
+                            </div>
+                        </div>
+                        <div class="procedure-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Назначение управляющего</h4>
+                                <p>Финансовый управляющий анализирует ваше финансовое положение</p>
+                            </div>
+                        </div>
+                        <div class="procedure-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Реструктуризация или реализация</h4>
+                                <p>Попытка реструктуризации долгов или продажа имущества</p>
+                            </div>
+                        </div>
+                        <div class="procedure-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Освобождение от долгов</h4>
+                                <p>Суд выносит решение об освобождении от долгов</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Consequences Tab -->
+                <div id="tab-consequences" class="tab-pane">
+                    <div class="info-card consequences-positive">
+                        <h3>Положительные последствия</h3>
+                        <ul>
+                            <li>Списание долгов</li>
+                            <li>Прекращение начисления процентов и штрафов</li>
+                            <li>Остановка исполнительных производств</li>
+                            <li>Снятие ареста с имущества</li>
+                            <li>Снятие запрета на выезд</li>
+                        </ul>
+                    </div>
+                    <div class="info-card consequences-negative">
+                        <h3>Временные ограничения</h3>
+                        <ul>
+                            <li>Запрет на кредиты 5 лет (с обязательным уведомлением)</li>
+                            <li>Запрет на руководство юр.лицами 3 года</li>
+                            <li>Обязанность сообщать о банкротстве при получении кредитов 5 лет</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Screen -->
+    <div id="booking-screen" class="screen">
+        <div class="container">
+            <button class="btn-back" onclick="showScreen('chat-screen')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 4l-8 6 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Назад
+            </button>
+            <h2 class="screen-title">Запись на консультацию</h2>
+            <p class="screen-subtitle">Заполните форму, и мы свяжемся с вами для уточнения деталей</p>
+            <form id="booking-form" class="booking-form">
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <input type="text" id="booking-name" class="form-control" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" id="booking-phone" class="form-control" placeholder="+7 (___) ___-__-__" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="booking-email" class="form-control" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Удобное время</label>
+                    <input type="datetime-local" id="booking-time" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Комментарий</label>
+                    <textarea id="booking-comment" class="form-control" rows="4" placeholder="Расскажите кратко о вашей ситуации"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label privacy-checkbox">
+                        <input type="checkbox" id="privacy-agree" required>
+                        <span>Я согласен с политикой конфиденциальности и обработкой персональных данных</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large">
+                    Отправить заявку
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <circle cx="30" cy="30" r="28" fill="#10b981" opacity="0.1"/>
+                <path d="M18 30l8 8 16-16" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>Заявка отправлена!</h3>
+            <p>Мы свяжемся с вами в ближайшее время для подтверждения консультации.</p>
+            <button class="btn btn-primary" onclick="closeSuccessModal()">Понятно</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
