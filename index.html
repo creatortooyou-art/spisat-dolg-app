@@ -1,10 +1,783 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Списать долг | Банкротство</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+:root {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-secondary: #f3f4f6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-background: #ffffff;
+  --color-border: #e5e7eb;
+  --color-surface: #f9fafb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Welcome Screen */
+.header-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+
+.welcome-subtitle {
+  font-size: 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+.welcome-description {
+  font-size: 15px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  padding: 0 16px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+  background-color: var(--color-primary-active);
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-primary);
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 16px;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+}
+
+.btn-back:hover {
+  color: var(--color-primary);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* User Type Selection */
+.screen-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--color-text);
+}
+
+.screen-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+.user-type-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.user-type-card {
+  background: white;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.user-type-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.user-type-card svg {
+  margin-bottom: 16px;
+}
+
+.user-type-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.user-type-card p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.progress-step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.progress-step.active {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.progress-line {
+  width: 60px;
+  height: 2px;
+  background-color: var(--color-border);
+}
+
+/* Forms */
+.questionnaire-form,
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  transition: all 0.2s;
+  background-color: white;
+  color: var(--color-text);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-with-suffix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-suffix input {
+  padding-right: 40px;
+}
+
+.input-suffix {
+  position: absolute;
+  right: 16px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.checkbox-label:hover {
+  border-color: var(--color-primary);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkbox-label span {
+  font-size: 15px;
+  color: var(--color-text);
+}
+
+.toggle-group {
+  display: flex;
+  gap: 12px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: white;
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.toggle-btn.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.privacy-checkbox {
+  font-size: 13px;
+  padding: 0;
+  border: none;
+}
+
+.privacy-checkbox input {
+  margin-right: 8px;
+}
+
+/* Chat Screen */
+#chat-screen {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: white;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.chat-header-title {
+  flex: 1;
+  margin-left: 12px;
+}
+
+.chat-header-title h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.online-status {
+  font-size: 12px;
+  color: var(--color-success);
+}
+
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.message-content {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  background-color: white;
+  box-shadow: var(--shadow-sm);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.message.user .message-content {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.quick-questions {
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border);
+  background-color: white;
+  overflow-x: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.quick-question-btn {
+  padding: 8px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: white;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.quick-question-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.chat-input-container {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: white;
+  border-top: 1px solid var(--color-border);
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.btn-send {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-send:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+
+/* Info Screen */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: var(--color-primary);
+}
+
+.tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tab-content {
+  display: block;
+}
+
+.tab-pane {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+.info-card {
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--color-text);
+}
+
+.info-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.info-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.info-card ul,
+.info-card ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.info-card li {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.consequences-positive {
+  border-left: 4px solid var(--color-success);
+}
+
+.consequences-negative {
+  border-left: 4px solid var(--color-warning);
+}
+
+.procedure-step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  max-width: 400px;
+  text-align: center;
+  animation: modalSlide 0.3s ease-out;
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content svg {
+  margin-bottom: 16px;
+}
+
+.modal-content h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.modal-content p {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .screen {
+    padding: 16px;
+  }
+
+  .welcome-title {
+    font-size: 24px;
+  }
+
+  .screen-title {
+    font-size: 20px;
+  }
+
+  .message-content {
+    max-width: 85%;
+  }
+
+  .tabs {
+    gap: 4px;
+  }
+
+  .tab-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+    </style>
 </head>
 <body>
     <!-- Welcome Screen -->
@@ -388,6 +1161,323 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+// Application state
+const state = {
+  currentScreen: 'welcome-screen',
+  userType: null,
+  questionnaireData: {
+    debtAmount: 0,
+    delayPeriod: '',
+    debtTypes: [],
+    hasProperty: null,
+    hasIncome: null
+  },
+  chatHistory: []
+};
+
+// Screen navigation
+function showScreen(screenId) {
+  // Hide all screens
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => screen.classList.remove('active'));
+  
+  // Show target screen
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen) {
+    targetScreen.classList.add('active');
+    state.currentScreen = screenId;
+    
+    // Special handling for specific screens
+    if (screenId === 'chat-screen' && state.chatHistory.length === 0) {
+      initializeChat();
+    }
+  }
+}
+
+// User type selection
+function selectUserType(type) {
+  state.userType = type;
+  showScreen('questionnaire-screen');
+}
+
+// Toggle buttons
+function toggleOption(button, inputId) {
+  const container = button.parentElement;
+  const buttons = container.querySelectorAll('.toggle-btn');
+  const hiddenInput = document.getElementById(inputId);
+  
+  buttons.forEach(btn => btn.classList.remove('active'));
+  button.classList.add('active');
+  hiddenInput.value = button.dataset.value;
+  
+  validateQuestionnaireForm();
+}
+
+// Form validation
+function validateQuestionnaireForm() {
+  const debtAmount = document.getElementById('debt-amount').value;
+  const delayPeriod = document.getElementById('delay-period').value;
+  const debtTypes = document.querySelectorAll('input[name="debt-type"]:checked');
+  const hasProperty = document.getElementById('has-property').value;
+  const hasIncome = document.getElementById('has-income').value;
+  const submitBtn = document.getElementById('questionnaire-submit');
+  
+  if (debtAmount && delayPeriod && debtTypes.length > 0 && hasProperty && hasIncome) {
+    submitBtn.disabled = false;
+  } else {
+    submitBtn.disabled = true;
+  }
+}
+
+// Questionnaire form submission
+document.addEventListener('DOMContentLoaded', function() {
+  // Form validation listeners
+  const form = document.getElementById('questionnaire-form');
+  if (form) {
+    form.addEventListener('input', validateQuestionnaireForm);
+    form.addEventListener('change', validateQuestionnaireForm);
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect form data
+      const debtTypes = Array.from(document.querySelectorAll('input[name="debt-type"]:checked'))
+        .map(cb => cb.value);
+      
+      state.questionnaireData = {
+        debtAmount: parseInt(document.getElementById('debt-amount').value),
+        delayPeriod: document.getElementById('delay-period').value,
+        debtTypes: debtTypes,
+        hasProperty: document.getElementById('has-property').value,
+        hasIncome: document.getElementById('has-income').value
+      };
+      
+      showScreen('chat-screen');
+    });
+  }
+  
+  // Booking form submission
+  const bookingForm = document.getElementById('booking-form');
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Simulate form submission
+      const modal = document.getElementById('success-modal');
+      modal.classList.add('active');
+      
+      // Reset form
+      bookingForm.reset();
+    });
+  }
+  
+  // Chat input enter key
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) {
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  }
+});
+
+// Initialize chat with personalized greeting
+function initializeChat() {
+  const chatContainer = document.getElementById('chat-messages');
+  chatContainer.innerHTML = '';
+  
+  const greeting = generatePersonalizedGreeting();
+  addAIMessage(greeting);
+}
+
+// Generate personalized greeting based on questionnaire
+function generatePersonalizedGreeting() {
+  const { debtAmount, delayPeriod, debtTypes, hasProperty, hasIncome } = state.questionnaireData;
+  const userTypeText = state.userType === 'individual' ? 'физическое лицо' : 'индивидуальный предприниматель';
+  
+  let greeting = `Здравствуйте! Я AI-консультант по банкротству. Вижу, что вы ${userTypeText} с задолженностью ${formatNumber(debtAmount)} рублей. `;
+  
+  // Provide specific advice based on debt amount
+  if (debtAmount >= 500000) {
+    greeting += `При такой сумме долга (более 500,000 руб) и просрочке более 3 месяцев процедура банкротства является обязательной по закону. `;
+  } else if (debtAmount >= 25000 && debtAmount <= 1000000 && hasProperty === 'no') {
+    greeting += `Ваша ситуация может подойти для упрощенной процедуры банкротства через МФЦ, которая является бесплатной и занимает около 6 месяцев. `;
+  } else {
+    greeting += `Для вашей ситуации возможна как судебная процедура банкротства, так и внесудебные варианты решения долговой проблемы. `;
+  }
+  
+  greeting += '\n\nЯ готов ответить на все ваши вопросы о процедуре банкротства, её стоимости, сроках и последствиях. Вы можете выбрать один из быстрых вопросов ниже или задать свой вопрос.';
+  
+  return greeting;
+}
+
+// Add AI message to chat
+function addAIMessage(text) {
+  const chatContainer = document.getElementById('chat-messages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message ai';
+  messageDiv.innerHTML = `
+    <div class="message-avatar">AI</div>
+    <div class="message-content">${text.replace(/\n/g, '<br>')}</div>
+  `;
+  chatContainer.appendChild(messageDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+  
+  state.chatHistory.push({ role: 'ai', content: text });
+}
+
+// Add user message to chat
+function addUserMessage(text) {
+  const chatContainer = document.getElementById('chat-messages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message user';
+  messageDiv.innerHTML = `
+    <div class="message-avatar">Вы</div>
+    <div class="message-content">${text}</div>
+  `;
+  chatContainer.appendChild(messageDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+  
+  state.chatHistory.push({ role: 'user', content: text });
+}
+
+// Send message from input
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  
+  if (message) {
+    addUserMessage(message);
+    input.value = '';
+    
+    // Simulate AI thinking delay
+    setTimeout(() => {
+      const response = generateAIResponse(message);
+      addAIMessage(response);
+    }, 1000);
+  }
+}
+
+// Quick question handler
+function askQuickQuestion(button) {
+  const question = button.dataset.question;
+  addUserMessage(question);
+  
+  setTimeout(() => {
+    const response = generateAIResponse(question);
+    addAIMessage(response);
+  }, 1000);
+}
+
+// Generate AI response based on question
+function generateAIResponse(question) {
+  const lowerQuestion = question.toLowerCase();
+  const { debtAmount, hasProperty, hasIncome } = state.questionnaireData;
+  const userTypeText = state.userType === 'individual' ? 'физических лиц' : 'ИП';
+  
+  // Response logic based on question content
+  if (lowerQuestion.includes('процедура') || lowerQuestion.includes('подходит')) {
+    let response = `Исходя из вашей ситуации (долг ${formatNumber(debtAmount)} руб), рекомендую следующее:\n\n`;
+    
+    if (debtAmount >= 500000) {
+      response += `**Судебное банкротство** - подходит для вашего случая:\n`;
+      response += `• Срок: 6-12 месяцев\n`;
+      response += `• Стоимость: 30,000-90,000 рублей\n`;
+      response += `• Этапы: подача заявления → назначение управляющего → реструктуризация или реализация имущества → освобождение от долгов\n\n`;
+    }
+    
+    if (debtAmount >= 25000 && debtAmount <= 1000000 && hasProperty === 'no') {
+      response += `**Упрощенное банкротство через МФЦ** - более простой вариант:\n`;
+      response += `• Срок: 6 месяцев\n`;
+      response += `• Стоимость: бесплатно\n`;
+      response += `• Условия: нет имущества для взыскания, закрытые исполнительные производства`;
+    }
+    
+    return response;
+  }
+  
+  if (lowerQuestion.includes('стоимость') || lowerQuestion.includes('стоит')) {
+    return `Стоимость процедуры банкротства ${userTypeText} зависит от выбранного варианта:\n\n**Судебное банкротство:**\n• От 30,000 до 90,000 рублей\n• Включает: госпошлину (300 руб), услуги финансового управляющего (от 25,000 руб), публикации в ЕФРСБ, юридическое сопровождение\n\n**Упрощенное через МФЦ:**\n• Полностью бесплатно\n• Доступно при долге 25,000-1,000,000 руб и отсутствии имущества\n\nХотите узнать подробнее о каком-то варианте?`;
+  }
+  
+  if (lowerQuestion.includes('документ')) {
+    return `Для процедуры банкротства ${userTypeText} потребуются:\n\n**Основные документы:**\n• Паспорт\n• СНИЛС\n• ИНН\n\n**Финансовые документы:**\n• Документы о долгах (кредитные договоры, решения судов)\n• Справки из банков о задолженности\n• Сведения о доходах за последние 3 года\n\n**Имущество:**\n• Список имущества с оценкой\n• Выписки из ЕГРН\n• Документы на транспорт\n\n**Дополнительно для ИП:**\n• Выписка из ЕГРИП\n• Бухгалтерская отчетность\n\nЯ могу помочь проверить ваш пакет документов на личной консультации.`;
+  }
+  
+  if (lowerQuestion.includes('длится') || lowerQuestion.includes('срок')) {
+    return `Сроки процедуры банкротства ${userTypeText}:\n\n**Упрощенное банкротство через МФЦ:**\n• 6 месяцев - фиксированный срок\n\n**Судебное банкротство:**\n• Обычно 6-12 месяцев\n• Реструктуризация долгов: до 3 лет\n• Реализация имущества: 6 месяцев (может продлеваться)\n\n**Этапы судебной процедуры:**\n1. Подача заявления (1-2 недели)\n2. Рассмотрение заявления судом (1-3 месяца)\n3. Процедура реструктуризации или реализации (6-9 месяцев)\n4. Завершение и освобождение от долгов\n\nТочный срок зависит от сложности вашей ситуации.`;
+  }
+  
+  if (lowerQuestion.includes('имущество')) {
+    const propertyResponse = hasProperty === 'yes' 
+      ? 'Вы указали, что у вас есть имущество. Важно знать:' 
+      : 'Вы указали, что у вас нет имущества. В этом случае:';
+    
+    return `${propertyResponse}\n\n**Защищенное имущество (не продается):**\n• Единственное жилье (кроме ипотечного)\n• Личные вещи и предметы домашнего обихода\n• Имущество стоимостью до 10,000 руб\n• Продукты питания\n• Призы и награды\n\n**Может быть реализовано:**\n• Вторая квартира, дача\n• Дорогостоящие вещи\n• Транспорт\n• Доля в бизнесе\n• Денежные средства на счетах\n\nФинансовый управляющий проведет оценку имущества и составит план реализации.`;
+  }
+  
+  // Default response
+  return `Благодарю за ваш вопрос. ${state.userType === 'individual' ? 'Для физических лиц' : 'Для индивидуальных предпринимателей'} процедура банкротства - это легальный способ решить проблему с долгами.\n\nОсновные преимущества:\n• Полное списание долгов\n• Остановка начисления процентов и штрафов\n• Прекращение давления кредиторов\n• Снятие запрета на выезд\n\nЕсли у вас есть конкретные вопросы о вашей ситуации, я рекомендую записаться на личную консультацию с юристом. Нажмите кнопку "Записаться" в верхней части экрана.\n\nЧем еще я могу вам помочь?`;
+}
+
+// Tab switching
+function switchTab(tabName) {
+  // Update tab buttons
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Update tab content
+  const tabPanes = document.querySelectorAll('.tab-pane');
+  tabPanes.forEach(pane => pane.classList.remove('active'));
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+}
+
+// Close success modal
+function closeSuccessModal() {
+  const modal = document.getElementById('success-modal');
+  modal.classList.remove('active');
+  showScreen('welcome-screen');
+}
+
+// Utility function to format numbers
+function formatNumber(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+// Phone input formatting
+document.addEventListener('DOMContentLoaded', function() {
+  const phoneInput = document.getElementById('booking-phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 0) {
+        if (value[0] === '7' || value[0] === '8') {
+          value = value.substring(1);
+        }
+        if (value.length > 10) {
+          value = value.substring(0, 10);
+        }
+        let formatted = '+7';
+        if (value.length > 0) {
+          formatted += ' (' + value.substring(0, 3);
+        }
+        if (value.length >= 4) {
+          formatted += ') ' + value.substring(3, 6);
+        }
+        if (value.length >= 7) {
+          formatted += '-' + value.substring(6, 8);
+        }
+        if (value.length >= 9) {
+          formatted += '-' + value.substring(8, 10);
+        }
+        e.target.value = formatted;
+      }
+    });
+  }
+});
+    </script>
 </body>
 </html>
